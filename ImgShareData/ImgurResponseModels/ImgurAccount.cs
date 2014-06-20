@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 
 namespace ImgShare.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// A imgur object that represents an account.
+    /// </summary>
     public class ImgurAccount
     {
         public int ID { get; set; }
