@@ -11,8 +11,9 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Net;
 using System.Threading;
+using ImgurAPIUnitTests.TestBase;
 
-namespace ImgurAPIUnitTests
+namespace ImgurAPIUnitTests.ImageEndpointTests
 {
     [TestClass]
     public class ImageTests

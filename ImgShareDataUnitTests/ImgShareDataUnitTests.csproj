@@ -118,6 +118,7 @@
     <Compile Include="GetGalleryImageTests.cs" />
     <Compile Include="ImageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

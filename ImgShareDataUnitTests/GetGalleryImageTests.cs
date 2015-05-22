@@ -5,11 +5,12 @@ using System.Text;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using ImgShare.Data;
 using ImgShare.Data.ImgurResponseModels;
+using ImgurAPIUnitTests.TestBase;
 
-namespace ImgurAPIUnitTests
+namespace ImgurAPIUnitTests.GalleryEndpoints
 {
     [TestClass]
-    public class GetGalleryImageTests
+    public class GalleryEndpointTests
     {
         [TestInitialize]
         public void StartupTests()
@@ -67,15 +68,5 @@ namespace ImgurAPIUnitTests
         }
     }
 
-    public static class Utilities
-    {
-        public static String ClientID = "204544071ed584d";
-        public static String ClientSecret = "884884ea1098066ca3e20cd7500a6f86a2663c8b";
 
-        public static void InitializeImgurAPISource()
-        {
-            ImgurApiSource.Instance.ClientID = Utilities.ClientID;
-            ImgurApiSource.Instance.ClientSecret = Utilities.ClientSecret;
-        }
-    }
 }
