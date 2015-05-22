@@ -54,14 +54,14 @@ namespace ImgurAPIUnitTests.ImageEndpointTests
         public void UploadImageWithFile()
         {
             
-            ImgurImage test = ImgurApiSource.Instance.PostImageAnonymousAsync(ImageBytes, "Hello", "DescriptionTest").Result;
+            ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(ImageBytes, "Hello", "DescriptionTest").Result;
             
             Assert.IsNotNull(test.Deletehash);
             
             // Queue this particular image for deletion
             imagesToDelete.Add(test);
 
-            test = ImgurApiSource.Instance.GetImageDetailsAsync(test.ID).Result;
+            test = ImgurApiSource.Instance.ImageDetailsAsync(test.ID).Result;
             Assert.AreEqual("Hello", test.Title);
             Assert.AreEqual("DescriptionTest", test.Description);
 
@@ -75,14 +75,14 @@ namespace ImgurAPIUnitTests.ImageEndpointTests
         [TestMethod]
         public void UploadImageWithURL()
         {
-            ImgurImage test = ImgurApiSource.Instance.PostImageAnonymousAsync(TestImage, "Hello", "DescriptionTest").Result;
+            ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(TestImage, "Hello", "DescriptionTest").Result;
 
             Assert.IsNotNull(test.Deletehash);
 
             // Queue this particular image for deletion
             imagesToDelete.Add(test);
 
-            test = ImgurApiSource.Instance.GetImageDetailsAsync(test.ID).Result;
+            test = ImgurApiSource.Instance.ImageDetailsAsync(test.ID).Result;
             Assert.AreEqual("Hello", test.Title);
             Assert.AreEqual("DescriptionTest", test.Description);
         }
@@ -93,13 +93,13 @@ namespace ImgurAPIUnitTests.ImageEndpointTests
         [TestMethod]
         public void DeleteUploadedImageByDeleteHash()
         {
-            ImgurImage test = ImgurApiSource.Instance.PostImageAnonymousAsync(ImageBytes, "Hello", "DescriptionTest").Result;
+            ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(ImageBytes, "Hello", "DescriptionTest").Result;
 
             System.Threading.SpinWait.SpinUntil(() => 0 == 1, TimeSpan.FromSeconds(4));
 
             Assert.IsNotNull(test.Deletehash);
 
-            ImgurBasic result = ImgurApiSource.Instance.DeleteImageAsync(test.Deletehash).Result;
+            ImgurBasic result = ImgurApiSource.Instance.ImageDeleteAsync(test.Deletehash).Result;
             Assert.IsTrue(result.success);
         }
 
@@ -109,19 +109,19 @@ namespace ImgurAPIUnitTests.ImageEndpointTests
         [TestMethod]
         public void UpdateImageByDeleteHash()
         {
-            ImgurImage test = ImgurApiSource.Instance.PostImageAnonymousAsync(ImageBytes, "Hello", "DescriptionTest").Result;
+            ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(ImageBytes, "Hello", "DescriptionTest").Result;
 
             // pause for 4 seconds while the server updates 
             System.Threading.SpinWait.SpinUntil(() => 0 == 1, TimeSpan.FromSeconds(4));
 
             Assert.IsNotNull(test.Deletehash);
 
-            ImgurBasic result = ImgurApiSource.Instance.UpdateImageInformationAsync(test.Deletehash, "NewTitle", "NewDescription").Result;
+            ImgurBasic result = ImgurApiSource.Instance.ImageUpdateAsync(test.Deletehash, "NewTitle", "NewDescription").Result;
 
             // pause for 4 more seconds while the server updates
             System.Threading.SpinWait.SpinUntil(() => 0 == 1, TimeSpan.FromSeconds(4));
 
-            ImgurImage image = ImgurApiSource.Instance.GetImageDetailsAsync(test.ID).Result;
+            ImgurImage image = ImgurApiSource.Instance.ImageDetailsAsync(test.ID).Result;
             Assert.AreEqual(image.Title, "NewTitle");
             Assert.AreEqual(image.Description, "NewDescription");
 
@@ -133,7 +133,7 @@ namespace ImgurAPIUnitTests.ImageEndpointTests
             // Cleanup any images we might have uploaded to Imgur during testing
             foreach(ImgurImage i in imagesToDelete)
             {
-                ImgurBasic result = ImgurApiSource.Instance.DeleteImageAsync(i.Deletehash).Result;
+                ImgurBasic result = ImgurApiSource.Instance.ImageDeleteAsync(i.Deletehash).Result;
                 if (!result.success)
                 {
                     throw new Exception("Unable to delete uploaded test images");
