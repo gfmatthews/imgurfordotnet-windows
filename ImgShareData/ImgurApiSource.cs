@@ -193,7 +193,7 @@ namespace ImgShare.APISource.Data
         /// <param name="sorting">The sorting method to use to sort the returned images.  Default is the viral sorting method.</param>
         /// <param name="page">The page number to return images from.  Default is the first page (0).</param>
         /// <returns>The list of images in the chosen gallery</returns>
-        public async Task<ImgurGalleryImageList> GalleryDetails(GallerySection section, GallerySort sorting=GallerySort.viral, int page=0)
+        public async Task<ImgurGalleryImageList> GalleryDetailsAsync(GallerySection section, GallerySort sorting=GallerySort.viral, int page=0)
         {
             string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Gallery(section, sorting, page));
             return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
@@ -207,7 +207,7 @@ namespace ImgShare.APISource.Data
         /// <param name="page">the data paging number</param>
         /// <param name="query">Query string. This parameter also supports boolean operators (AND, OR, NOT) and indices (tag: user: title: ext: subreddit: album: meme:). An example compound query would be 'title: cats AND dogs ext: gif'</param>
         /// <returns></returns>
-        public async Task<ImgurGalleryImageList> GallerySearch(GallerySort sorting=GallerySort.time, GallerySearchWindow window=GallerySearchWindow.all, int page=0, string query ="")
+        public async Task<ImgurGalleryImageList> GallerySearchAsync(GallerySort sorting=GallerySort.time, GallerySearchWindow window=GallerySearchWindow.all, int page=0, string query ="")
         {
             String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GallerySearch(sorting, window, page, query));
             return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));

@@ -24,7 +24,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         [TestMethod]
         public void TopImagesReturnsImages()
         {
-            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetails(GallerySection.top, GallerySort.viral, 0).Result;
+            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.top, GallerySort.viral, 0).Result;
             // Check that some images are in the list
             Assert.IsFalse((list.Images.Count() < 5));
         }
@@ -35,11 +35,11 @@ namespace ImgShare.APISource.UnitTests.Gallery
         [TestMethod]
         public void GetImagesReturnsImagesOnDifferentPages()
         {
-            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetails(GallerySection.top, GallerySort.viral, 1).Result;
+            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.top, GallerySort.viral, 1).Result;
             // Check that some images are in the list
             Assert.IsFalse((list.Images.Count() < 5));
 
-            ImgurGalleryImageList newlist = ImgurApiSource.Instance.GalleryDetails(GallerySection.hot, GallerySort.viral, 4).Result;
+            ImgurGalleryImageList newlist = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.hot, GallerySort.viral, 4).Result;
             // Check that some images are in the list
             Assert.IsFalse((newlist.Images.Count() < 5));
         }
@@ -50,7 +50,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         [TestMethod]
         public void HotImagesReturnsImages()
         {
-            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetails(GallerySection.hot, GallerySort.time, 0).Result;
+            ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.hot, GallerySort.time, 0).Result;
             // Check that some images are in the list
             Assert.IsFalse((list.Images.Count() < 5));
         }
@@ -61,7 +61,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         [TestMethod]
         public void GallerySearchReturnsImages()
         {
-            ImgurGalleryImageList list = ImgurApiSource.Instance.GallerySearch(GallerySort.time, GallerySearchWindow.all, 0, "cats").Result;
+            ImgurGalleryImageList list = ImgurApiSource.Instance.GallerySearchAsync(GallerySort.time, GallerySearchWindow.all, 0, "cats").Result;
 
             // Check that some images are in the list
             Assert.IsFalse((list.Images.Count() < 5));
