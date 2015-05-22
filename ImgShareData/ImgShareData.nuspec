@@ -2,16 +2,16 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>
+    <version>0.3.0</version>
+    <title>ImgShare.APISource</title>
     <authors>George Matthews</authors>
     <owners>George Matthews</owners>
     <licenseUrl>https://github.com/gfmatthews/imgurfordotnet-windows/wiki/License</licenseUrl>
     <projectUrl>https://github.com/gfmatthews/imgurfordotnet-windows</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple asynchronous imgur client for Windows applications</description>
-    <releaseNotes>Initial Release</releaseNotes>
-    <copyright>George Matthews Copyright 2014</copyright>
+    <releaseNotes>Includes updates and bugfixes</releaseNotes>
+    <copyright>George Matthews Copyright 2015</copyright>
     <tags>Imgur API async c# imgurapi</tags>
   </metadata>
 </package>
