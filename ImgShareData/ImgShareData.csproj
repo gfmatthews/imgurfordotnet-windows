@@ -9,7 +9,7 @@
     <ProjectGuid>{118A460C-DA6B-4FF1-921A-56FED4543E54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImgShare.Data</RootNamespace>
+    <RootNamespace>ImgShare.APISource.Data</RootNamespace>
     <AssemblyName>ImgShare.APISource</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
@@ -116,6 +116,9 @@
     <Compile Include="ImgurResponseModels\ImgurImage.cs" />
     <Compile Include="ImgurApiSource.cs" />
     <Compile Include="ImgurEndpoints.cs" />
+    <Compile Include="ImgurResponseModels\ImgurNotification.cs" />
+    <Compile Include="ImgurResponseModels\ImgurTopic.cs" />
+    <Compile Include="ImgurResponseModels\ImgurVote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
@@ -126,6 +129,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ImgShareData.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">

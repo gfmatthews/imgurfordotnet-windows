@@ -6,10 +6,10 @@ using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ImgShare.Data.ImgurResponseModels;
+using ImgShare.APISource.Data.ImgurResponseModels;
 using Newtonsoft.Json;
 
-namespace ImgShare.Data
+namespace ImgShare.APISource.Data
 {
     public class ImgurApiSource
     {
@@ -99,146 +99,6 @@ namespace ImgShare.Data
         }
         #endregion
 
-        #region API Calls
-        /// <summary>
-        /// Returns the list of images in the Main gallery in the given section and with the given sort method
-        /// </summary>
-        /// <param name="section">The section to get the images from.</param>
-        /// <param name="sorting">The sorting method to use to sort the returned images.  Default is the viral sorting method.</param>
-        /// <param name="page">The page number to return images from.  Default is the first page (0).</param>
-        /// <returns>The list of images in the chosen gallery</returns>
-        public async Task<ImgurGalleryImageList> GetMainGalleryImagesAsync(MainGallerySection section, MainGallerySort sorting=MainGallerySort.viral, int page=0)
-        {
-            string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GetMainGallery(section, sorting, page));
-            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
-        }
-
-        /// <summary>
-        /// Search the gallery with a given query string.
-        /// </summary>
-        /// <param name="sorting">time | viral | top - defaults to time</param>
-        /// <param name="window">Change the date range of the request if the sort is 'top', day | week | month | year | all, defaults to all.</param>
-        /// <param name="page">the data paging number</param>
-        /// <param name="query">Query string. This parameter also supports boolean operators (AND, OR, NOT) and indices (tag: user: title: ext: subreddit: album: meme:). An example compound query would be 'title: cats AND dogs ext: gif'</param>
-        /// <returns></returns>
-        public async Task<ImgurGalleryImageList> SearchMainGalleryImagesAsync(MainGallerySort sorting=MainGallerySort.time, GalleryWindow window=GalleryWindow.all, int page=0, string query ="")
-        {
-            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GallerySearch(sorting, window, page, query));
-            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
-        }
-
-        /// <summary>
-        /// Fills in an ImgurImage object with details for a specific image.  Requires an ImageID.
-        /// </summary>
-        /// <param name="imageID">The Imgur image ID of the image you want details for.</param>
-        /// <returns>A nicely filled in ImgurImage object.  All for you.</returns>
-        public async Task<ImgurImage> GetImageDetailsAsync(String imageID)
-        {
-            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Image(imageID));
-            return (await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString))).Image;
-        }
-
-        /// <summary>
-        /// Upload a new image.
-        /// </summary>
-        /// <param name="ImageToUploadFileData">A Byte array representing the image</param>
-        /// <param name="Title">The title of the image</param>
-        /// <param name="Description"> The description of the image</param>
-        /// <param name="Album">The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.</param>
-        /// <returns>A ImgurImage object that represents the image just uploaded</returns>
-        public async Task<ImgurImage> PostImageAnonymousAsync(Byte[] ImageToUploadFileData, String Title="", String Description="", String Album="")
-        {
-            // TODO: Make all the strings used in form content constants somewhere
-            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
-            content.Add(new ByteArrayContent(ImageToUploadFileData), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
-            if (Title != "")
-            {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
-            }
-            if (Description != "")
-            {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
-            }
-            if (Album != "")
-            {
-                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
-            }
-     
-            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(), content);
-            ImgurBasicWithImage returnedImage = await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
-
-            return returnedImage.Image;
-        }
-
-        /// <summary>
-        /// Upload a new image.
-        /// </summary>
-        /// <param name="url">The url to an image to upload</param>
-        /// <param name="Title">The title of the image</param>
-        /// <param name="Description"> The description of the image</param>
-        /// <param name="Album">The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.</param>
-        /// <returns>A ImgurImage object that represents the image just uploaded</returns>
-        public async Task<ImgurImage> PostImageAnonymousAsync(String url, String Title="", String Description="", String Album="")
-        {
-            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
-            content.Add(new StringContent(url), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
-            if (Title != "")
-            {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
-            }
-            if (Description != "")
-            {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
-            }
-            if (Album != "")
-            {
-                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
-            }
-
-            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(), content);
-            ImgurBasicWithImage returnedImage = await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
-
-            return returnedImage.Image;
-        }
-
-        /// <summary>
-        /// Deletes an image
-        /// </summary>
-        /// <param name="deleteID">If this image belongs to the account, the ID, if not, the deletehash</param>
-        /// <returns>An ImgurBasic response</returns>
-        public async Task<ImgurBasic> DeleteImageAsync(String deleteID)
-        {
-            String responseString = await DeleteImgurDataAsync(ImgurEndpoints.Image(deleteID));
-            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
-        }
-
-        /// <summary>
-        /// Updates the title or description of an image. You can only update an image you own and is associated with your account. For an anonymous image, {id} must be the image's deletehash.
-        /// </summary>
-        /// <param name="deleteHashOrImageID">The deletehash or ID of an image (ID ONLY WORKS IF LOGGED IN!)</param>
-        /// <param name="Title">The title of the image.</param>
-        /// <param name="Description">The description of the image.</param>
-        /// <returns></returns>
-        public async Task<ImgurBasic> UpdateImageInformationAsync(String deleteHashOrImageID, String Title="", String Description="")
-        {
-            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
-            if (Title != "")
-            {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
-            }
-            if (Description != "")
-            {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
-            }
-            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(deleteHashOrImageID), content);
-            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
-
-            return status;
-        }
-
-
-        #endregion
-
         #region Internal Methods to Fetch and Add Data
         /// <summary>
         /// Fetches data asynchronously (and anonymously) for a given Imgur API endpoint.  Used by other calls in this 
@@ -311,5 +171,159 @@ namespace ImgShare.Data
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Client-ID", this._clientid);
         }
         #endregion
+
+        #region [API] Album Endpoint
+        /// <summary>
+        /// Get information about a specific album
+        /// </summary>
+        /// <param name="albumID">The requested album ID</param>
+        /// <returns></returns>
+        public async Task<ImgurAlbum> AlbumDetailsAsync(string albumID)
+        {
+            string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Album(albumID));
+            return await Task.Run(() => JsonConvert.DeserializeObject<ImgurAlbum>(responseString, _defaultSerializerSettings));
+        }
+        #endregion
+
+        #region [API] Gallery Endpoint
+        /// <summary>
+        /// Returns the list of images in the Main gallery in the given section and with the given sort method
+        /// </summary>
+        /// <param name="section">The section to get the images from.</param>
+        /// <param name="sorting">The sorting method to use to sort the returned images.  Default is the viral sorting method.</param>
+        /// <param name="page">The page number to return images from.  Default is the first page (0).</param>
+        /// <returns>The list of images in the chosen gallery</returns>
+        public async Task<ImgurGalleryImageList> GalleryDetails(GallerySection section, GallerySort sorting=GallerySort.viral, int page=0)
+        {
+            string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Gallery(section, sorting, page));
+            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
+        }
+
+        /// <summary>
+        /// Search the gallery with a given query string.
+        /// </summary>
+        /// <param name="sorting">time | viral | top - defaults to time</param>
+        /// <param name="window">Change the date range of the request if the sort is 'top', day | week | month | year | all, defaults to all.</param>
+        /// <param name="page">the data paging number</param>
+        /// <param name="query">Query string. This parameter also supports boolean operators (AND, OR, NOT) and indices (tag: user: title: ext: subreddit: album: meme:). An example compound query would be 'title: cats AND dogs ext: gif'</param>
+        /// <returns></returns>
+        public async Task<ImgurGalleryImageList> GallerySearch(GallerySort sorting=GallerySort.time, GallerySearchWindow window=GallerySearchWindow.all, int page=0, string query ="")
+        {
+            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GallerySearch(sorting, window, page, query));
+            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
+        }
+        #endregion
+
+        #region [API] Image Endpoint
+        /// <summary>
+        /// Fills in an ImgurImage object with details for a specific image.  Requires an ImageID.
+        /// </summary>
+        /// <param name="imageID">The Imgur image ID of the image you want details for.</param>
+        /// <returns>A nicely filled in ImgurImage object.  All for you.</returns>
+        public async Task<ImgurImage> ImageDetailsAsync(String imageID)
+        {
+            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Image(imageID));
+            return (await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString))).Image;
+        }
+
+        /// <summary>
+        /// Upload a new image.
+        /// </summary>
+        /// <param name="ImageToUploadFileData">A Byte array representing the image</param>
+        /// <param name="Title">The title of the image</param>
+        /// <param name="Description"> The description of the image</param>
+        /// <param name="Album">The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.</param>
+        /// <returns>A ImgurImage object that represents the image just uploaded</returns>
+        public async Task<ImgurImage> ImageUploadAsync(Byte[] ImageToUploadFileData, String Title = "", String Description = "", String Album = "")
+        {
+            // TODO: Make all the strings used in form content constants somewhere
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            content.Add(new ByteArrayContent(ImageToUploadFileData), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
+            if (Title != "")
+            {
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+            }
+            if (Description != "")
+            {
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+            }
+            if (Album != "")
+            {
+                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
+            }
+
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpload(), content);
+            ImgurBasicWithImage returnedImage = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
+
+            return returnedImage.Image;
+        }
+
+        /// <summary>
+        /// Upload a new image.
+        /// </summary>
+        /// <param name="url">The url to an image to upload</param>
+        /// <param name="Title">The title of the image</param>
+        /// <param name="Description"> The description of the image</param>
+        /// <param name="Album">The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.</param>
+        /// <returns>A ImgurImage object that represents the image just uploaded</returns>
+        public async Task<ImgurImage> ImageUploadAsync(String url, String Title = "", String Description = "", String Album = "")
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            content.Add(new StringContent(url), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
+            if (Title != "")
+            {
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+            }
+            if (Description != "")
+            {
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+            }
+            if (Album != "")
+            {
+                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
+            }
+
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpload(), content);
+            ImgurBasicWithImage returnedImage = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
+
+            return returnedImage.Image;
+        }
+
+        /// <summary>
+        /// Deletes an image
+        /// </summary>
+        /// <param name="deleteID">If this image belongs to the account, the ID, if not, the deletehash</param>
+        /// <returns>An ImgurBasic response</returns>
+        public async Task<ImgurBasic> ImageDeleteAsync(String deleteID)
+        {
+            String responseString = await DeleteImgurDataAsync(ImgurEndpoints.ImageDeletion(deleteID));
+            return await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+        }
+
+        /// <summary>
+        /// Updates the title or description of an image. You can only update an image you own and is associated with your account. For an anonymous image, {id} must be the image's deletehash.
+        /// </summary>
+        /// <param name="deleteHashOrImageID">The deletehash or ID of an image (ID ONLY WORKS IF LOGGED IN!)</param>
+        /// <param name="Title">The title of the image.</param>
+        /// <param name="Description">The description of the image.</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> ImageUpdateAsync(String deleteHashOrImageID, String Title = "", String Description = "")
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            if (Title != "")
+            {
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+            }
+            if (Description != "")
+            {
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+            }
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpdate(deleteHashOrImageID), content);
+            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+
+            return status;
+        }
+        #endregion
+
     }
 }
