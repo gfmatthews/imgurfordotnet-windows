@@ -39,6 +39,21 @@ namespace ImgShare.Data
                 this._clientsecret = value;
             }
         }
+
+        internal ImgurEndpointUseType _useType = ImgurEndpointUseType.free;
+
+        public ImgurEndpointUseType UseType
+        {
+            set
+            {
+                ImgurEndpoints._useType = value;
+            }
+            get
+            {
+                return ImgurEndpoints._useType;
+            }
+        }
+
         #endregion
 
         #region Singleton Setup
