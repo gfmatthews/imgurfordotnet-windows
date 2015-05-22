@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
 
-namespace ImgShare.Data.ImgurResponseModels
+namespace ImgShare.APISource.Data.ImgurResponseModels
 {
     public class ImgurImage
     {

@@ -6,10 +6,10 @@ using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ImgShare.Data.ImgurResponseModels;
+using ImgShare.APISource.Data.ImgurResponseModels;
 using Newtonsoft.Json;
 
-namespace ImgShare.Data
+namespace ImgShare.APISource.Data
 {
     public class ImgurApiSource
     {

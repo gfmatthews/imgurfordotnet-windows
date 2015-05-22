@@ -9,8 +9,8 @@
     <ProjectGuid>{647C005E-3452-4D69-8AD0-A42E1C4E6B2E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImgShareDataUnitTests</RootNamespace>
-    <AssemblyName>ImgShareDataUnitTests</AssemblyName>
+    <RootNamespace>ImgShare.APISource.UnitTests</RootNamespace>
+    <AssemblyName>ImgShare.APISource.UnitTests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -115,6 +115,7 @@
     <SDKReference Include="TestPlatform, Version=11.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlbumTests.cs" />
     <Compile Include="GetGalleryImageTests.cs" />
     <Compile Include="ImageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

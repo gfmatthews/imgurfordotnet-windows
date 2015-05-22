@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImgShare.Data.ImgurResponseModels
+namespace ImgShare.APISource.Data.ImgurResponseModels
 {
     public class Trophy
     {

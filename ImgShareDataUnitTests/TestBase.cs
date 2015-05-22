@@ -1,11 +1,11 @@
-﻿using ImgShare.Data;
+﻿using ImgShare.APISource.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImgurAPIUnitTests.TestBase
+namespace ImgShare.APISource.UnitTests.TestBase
 {
     public static class Utilities
     {

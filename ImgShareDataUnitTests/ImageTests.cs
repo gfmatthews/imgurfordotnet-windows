@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using ImgShare.Data.ImgurResponseModels;
-using ImgShare.Data;
+using ImgShare.APISource.Data.ImgurResponseModels;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Net;
 using System.Threading;
-using ImgurAPIUnitTests.TestBase;
+using ImgShare.APISource.UnitTests.TestBase;
+using ImgShare.APISource.Data;
 
-namespace ImgurAPIUnitTests.ImageEndpointTests
+namespace ImgShare.APISource.UnitTests.Image
 {
     [TestClass]
     public class ImageTests

@@ -9,7 +9,7 @@
     <ProjectGuid>{118A460C-DA6B-4FF1-921A-56FED4543E54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImgShare.Data</RootNamespace>
+    <RootNamespace>ImgShare.APISource.Data</RootNamespace>
     <AssemblyName>ImgShare.APISource</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>

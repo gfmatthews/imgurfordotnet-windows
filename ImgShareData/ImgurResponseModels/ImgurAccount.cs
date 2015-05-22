@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace ImgShare.Data.ImgurResponseModels
+namespace ImgShare.APISource.Data.ImgurResponseModels
 {
     /// <summary>
     /// A imgur object that represents an account.
