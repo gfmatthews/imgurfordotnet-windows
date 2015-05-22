@@ -55,19 +55,15 @@ namespace ImgurAPIUnitTests
         }
 
         /// <summary>
-        /// Fills in image details for a single image returned from the hot images section.
+        /// Check that the search actually returns a few images if you look for cats
         /// </summary>
         [TestMethod]
-        public void ImageDetailsFilledInForImage()
+        public void GallerySearchReturnsImages()
         {
-            ImgurGalleryImageList testImageList = ImgurApiSource.Instance.GetMainGalleryImagesAsync(MainGallerySection.hot, MainGallerySort.viral, 0).Result;
-            ImgurImage testImage = testImageList.Images.ElementAt(3);
+            ImgurGalleryImageList list = ImgurApiSource.Instance.SearchMainGalleryImagesAsync(MainGallerySort.time, GalleryWindow.all, 0, "cats").Result;
 
-            ImgurImage newtestImage = ImgurApiSource.Instance.GetImageDetailsAsync(testImage.ID).Result;
-
-            Assert.IsNotNull(newtestImage.isAnimated);
-            Assert.IsNotNull(newtestImage.Height);
-            Assert.IsNotNull(newtestImage.Bandwidth);
+            // Check that some images are in the list
+            Assert.IsFalse((list.Images.Count() < 5));
         }
     }
 

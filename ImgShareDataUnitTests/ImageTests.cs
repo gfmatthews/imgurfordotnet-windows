@@ -102,6 +102,30 @@ namespace ImgurAPIUnitTests
             Assert.IsTrue(result.success);
         }
 
+        /// <summary>
+        /// Uploads an Image to Imgur by ByteArray then attempts to update the metadata
+        /// </summary>
+        [TestMethod]
+        public void UpdateImageByDeleteHash()
+        {
+            ImgurImage test = ImgurApiSource.Instance.PostImageAnonymousAsync(ImageBytes, "Hello", "DescriptionTest").Result;
+
+            // pause for 4 seconds while the server updates 
+            System.Threading.SpinWait.SpinUntil(() => 0 == 1, TimeSpan.FromSeconds(4));
+
+            Assert.IsNotNull(test.Deletehash);
+
+            ImgurBasic result = ImgurApiSource.Instance.UpdateImageInformationAsync(test.Deletehash, "NewTitle", "NewDescription").Result;
+
+            // pause for 4 more seconds while the server updates
+            System.Threading.SpinWait.SpinUntil(() => 0 == 1, TimeSpan.FromSeconds(4));
+
+            ImgurImage image = ImgurApiSource.Instance.GetImageDetailsAsync(test.ID).Result;
+            Assert.AreEqual(image.Title, "NewTitle");
+            Assert.AreEqual(image.Description, "NewDescription");
+
+        }
+
         [TestCleanup]
         public void RemoveImages()
         {
