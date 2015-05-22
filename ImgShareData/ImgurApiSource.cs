@@ -212,6 +212,30 @@ namespace ImgShare.Data
             return await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
         }
 
+        /// <summary>
+        /// Updates the title or description of an image. You can only update an image you own and is associated with your account. For an anonymous image, {id} must be the image's deletehash.
+        /// </summary>
+        /// <param name="deleteHashOrImageID">The deletehash or ID of an image (ID ONLY WORKS IF LOGGED IN!)</param>
+        /// <param name="Title">The title of the image.</param>
+        /// <param name="Description">The description of the image.</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> UpdateImageInformationAsync(String deleteHashOrImageID, String Title="", String Description="")
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            if (Title != "")
+            {
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+            }
+            if (Description != "")
+            {
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+            }
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(deleteHashOrImageID), content);
+            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+
+            return status;
+        }
+
 
         #endregion
 
