@@ -30,6 +30,7 @@ namespace ImgShare.Data
         static private String _maingallery = String.Format(APIBase, "gallery/{0}/{1}/{2}.json");
         static private String _image = String.Format(APIBase, "image/{0}");
         static private String _imageUpload = String.Format(APIBase, "upload");
+        static private String _gallerySearch = String.Format(APIBase, "gallery/search/{0}/{1}/{2}");
         static internal ImgurEndpointUseType _useType = ImgurEndpointUseType.free;
 
         static public String GetMainGallery(MainGallerySection section, MainGallerySort sort, int page)
@@ -50,6 +51,27 @@ namespace ImgShare.Data
         {
             return String.Format(_image,
                                  String.Empty);
+        }
+
+        static public String GallerySearch(MainGallerySort sort, GalleryWindow window, int page, String queryString="")
+        {
+            String queryBase = String.Format(_gallerySearch,
+                                         Utilities.convertToString(sort),
+                                         Utilities.convertToString(window),
+                                         page
+                                         );
+            if (queryString == "")
+                return queryBase;
+            else
+            {
+                UriBuilder builder = new UriBuilder(queryBase);
+                if (queryString.StartsWith("q="))
+                    builder.Query = queryString;
+                else
+                    builder.Query = "q=" + queryString;
+                return builder.ToString();
+            }
+
         }
 
         static public Dictionary<ImageEndpointParameters, String> ImageEndpointParameterLookup = new Dictionary<ImageEndpointParameters, string>()
@@ -86,5 +108,14 @@ namespace ImgShare.Data
     {
         free,
         paid
+    };
+
+    public enum GalleryWindow
+    {
+        day,
+        week,
+        month,
+        year,
+        all
     };
 }

@@ -94,8 +94,22 @@ namespace ImgShare.Data
         /// <returns>The list of images in the chosen gallery</returns>
         public async Task<ImgurGalleryImageList> GetMainGalleryImagesAsync(MainGallerySection section, MainGallerySort sorting=MainGallerySort.viral, int page=0)
         {
-            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GetMainGallery(section, sorting, page));
-            return await JsonConvert.DeserializeObjectAsync<ImgurGalleryImageList>(responseString, _defaultSerializerSettings);
+            string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GetMainGallery(section, sorting, page));
+            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
+        }
+
+        /// <summary>
+        /// Search the gallery with a given query string.
+        /// </summary>
+        /// <param name="sorting">time | viral | top - defaults to time</param>
+        /// <param name="window">Change the date range of the request if the sort is 'top', day | week | month | year | all, defaults to all.</param>
+        /// <param name="page">the data paging number</param>
+        /// <param name="query">Query string. This parameter also supports boolean operators (AND, OR, NOT) and indices (tag: user: title: ext: subreddit: album: meme:). An example compound query would be 'title: cats AND dogs ext: gif'</param>
+        /// <returns></returns>
+        public async Task<ImgurGalleryImageList> SearchMainGalleryImagesAsync(MainGallerySort sorting=MainGallerySort.time, GalleryWindow window=GalleryWindow.all, int page=0, string query ="")
+        {
+            String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.GallerySearch(sorting, window, page, query));
+            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurGalleryImageList>(responseString, _defaultSerializerSettings));
         }
 
         /// <summary>
@@ -106,7 +120,7 @@ namespace ImgShare.Data
         public async Task<ImgurImage> GetImageDetailsAsync(String imageID)
         {
             String responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Image(imageID));
-            return (await JsonConvert.DeserializeObjectAsync<ImgurBasicWithImage>(responseString)).Image;
+            return (await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString))).Image;
         }
 
         /// <summary>
@@ -136,7 +150,7 @@ namespace ImgShare.Data
             }
      
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(), content);
-            ImgurBasicWithImage returnedImage = await JsonConvert.DeserializeObjectAsync<ImgurBasicWithImage>(responseString, _defaultSerializerSettings);
+            ImgurBasicWithImage returnedImage = await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
 
             return returnedImage.Image;
         }
@@ -167,7 +181,7 @@ namespace ImgShare.Data
             }
 
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.Image(), content);
-            ImgurBasicWithImage returnedImage = await JsonConvert.DeserializeObjectAsync<ImgurBasicWithImage>(responseString, _defaultSerializerSettings);
+            ImgurBasicWithImage returnedImage = await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasicWithImage>(responseString, _defaultSerializerSettings));
 
             return returnedImage.Image;
         }
@@ -180,7 +194,7 @@ namespace ImgShare.Data
         public async Task<ImgurBasic> DeleteImageAsync(String deleteID)
         {
             String responseString = await DeleteImgurDataAsync(ImgurEndpoints.Image(deleteID));
-            return await JsonConvert.DeserializeObjectAsync<ImgurBasic>(responseString, _defaultSerializerSettings);
+            return await Task.Run( () => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
         }
 
 

@@ -112,6 +112,7 @@
     <Compile Include="ImgurResponseModels\ImgurBasicWithImage.cs" />
     <Compile Include="ImgurResponseModels\ImgurComment.cs" />
     <Compile Include="ImgurResponseModels\ImgurGalleryImage.cs" />
+    <Compile Include="ImgurResponseModels\ImgurGalleryProfile.cs" />
     <Compile Include="ImgurResponseModels\ImgurImage.cs" />
     <Compile Include="ImgurApiSource.cs" />
     <Compile Include="ImgurEndpoints.cs" />
