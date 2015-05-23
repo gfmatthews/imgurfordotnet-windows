@@ -177,12 +177,175 @@ namespace ImgShare.APISource.Data
         /// Get information about a specific album
         /// </summary>
         /// <param name="albumID">The requested album ID</param>
-        /// <returns></returns>
+        /// <returns>A filled in album object</returns>
         public async Task<ImgurAlbum> AlbumDetailsAsync(string albumID)
         {
             string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.Album(albumID));
             return await Task.Run(() => JsonConvert.DeserializeObject<ImgurAlbum>(responseString, _defaultSerializerSettings));
         }
+
+        /// <summary>
+        /// Gets a list of the images in an album
+        /// </summary>
+        /// <param name="albumID">The requested album ID</param>
+        /// <returns>The list of images in the album</returns>
+        public async Task<List<ImgurImage>> AlbumImagesAsync(string albumID)
+        {
+            string responseString = await GetAnonymousImgurDataAsync(ImgurEndpoints.AlbumImages(albumID));
+            return await Task.Run(() => JsonConvert.DeserializeObject<List<ImgurImage>>(responseString, _defaultSerializerSettings));
+        }
+
+        /// <summary>
+        /// Create a new album.
+        /// </summary>
+        /// <param name="imageIDs">The image ids that you want to be included in the album.</param>
+        /// <param name="coverImageId">The id of the image you want to set as the cover.  If the coverImageID isn't in the list you specified in the first parameter, this is ignored.</param>
+        /// <param name="title"> The title of the album </param>
+        /// <param name="description">The description of the album</param>
+        /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
+        /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> AlbumCreation(List<string> imageIDs, string coverImageId, String title="", String description="", Privacy albumPrivacy=Privacy.ignore, Layout albumLayout=Layout.ignore)
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            if (imageIDs.Count != 0 || imageIDs==null)
+            {
+                string serializedImageList = await Task.Run(() => JsonConvert.SerializeObject(imageIDs));
+                content.Add(new StringContent(serializedImageList), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.ids]);
+            }
+            if (imageIDs.Contains(coverImageId))
+            {
+                content.Add(new StringContent(coverImageId), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.cover]);
+            }
+            if (title != "")
+            {
+                content.Add(new StringContent(title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.title]);
+            }
+            if (description != "")
+            {
+                content.Add(new StringContent(title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.description]);
+            }
+            if (albumPrivacy != Privacy.ignore)
+            {
+                content.Add(new StringContent(Utilities.convertToString(albumPrivacy)), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.privacy]);
+            }
+            if (albumLayout != Layout.ignore)
+            {
+                content.Add(new StringContent(Utilities.convertToString(albumLayout)), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.layout]);
+            }
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.AlbumCreation(), content);
+            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+
+            // TODO: Right now we only get a basic response.  For anonymous calls, this should return the deletehash. But the offical docs say that this call only returns a
+            // basic response (which wouldn't have that... right?)  
+            // make this return a deletehash or an album object
+            return status;
+        }
+
+        /// <summary>
+        /// Create a new album.
+        /// </summary>
+        /// <param name="imageList">The images that you want to be included in the album.</param>
+        /// <param name="coverImage">The image you want to set as the cover.  If the coverImage isn't in the list you specified in the first parameter, this is ignored.</param>
+        /// <param name="title"> The title of the album </param>
+        /// <param name="description">The description of the album</param>
+        /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
+        /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
+        public async Task<ImgurBasic> AlbumCreation(List<ImgurImage> imageList, ImgurImage coverImage, String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
+        {
+            List<string> imageIDList = new List<string>();
+            foreach (ImgurImage i in imageList)
+            {
+                imageIDList.Add(i.ID);
+            }
+
+            return await AlbumCreation(imageIDList, coverImage.ID, title, description, albumPrivacy, albumLayout);
+        }
+
+        /// <summary>
+        /// Update the information of an album. For anonymous albums, {album} should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="albumID">The album ID to update</param>
+        /// <param name="imageList">The images that you want to be included in the album.</param>
+        /// <param name="coverImage">The image you want to set as the cover.</param>
+        /// <param name="title"> The title of the album </param>
+        /// <param name="description">The description of the album</param>
+        /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
+        /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> AlbumUpdate(string albumID, List<ImgurImage> imageList, ImgurImage coverImage, String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
+        {
+            List<string> imageIDList = new List<string>();
+            foreach (ImgurImage i in imageList)
+            {
+                imageIDList.Add(i.ID);
+            }
+
+            return await AlbumUpdate(albumID, imageIDList, coverImage.ID, title, description, albumPrivacy, albumLayout);
+        }
+
+        /// <summary>
+        /// Update the information of an album. For anonymous albums, {album} should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="albumID">The album ID (only if logged in) or deletehash of the album to update</param>
+        /// <param name="imageIDs">The image ids that you want to be included in the album.</param>
+        /// <param name="coverImageId">The id of the image you want to set as the cover.</param>
+        /// <param name="title"> The title of the album </param>
+        /// <param name="description">The description of the album</param>
+        /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
+        /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> AlbumUpdate(string albumID, List<string> imageIDs, string coverImageId, String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
+        {
+            if (albumID == null)
+            {
+                throw new ArgumentNullException("albumID");
+            }
+            
+            MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
+            if (imageIDs.Count != 0 || imageIDs==null)
+            {
+                string serializedImageList = await Task.Run(() => JsonConvert.SerializeObject(imageIDs));
+                content.Add(new StringContent(serializedImageList), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.ids]);
+            }
+            if (coverImageId != String.Empty)
+            {
+                content.Add(new StringContent(coverImageId), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.cover]);
+            }
+            if (title != "")
+            {
+                content.Add(new StringContent(title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.title]);
+            }
+            if (description != "")
+            {
+                content.Add(new StringContent(title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.description]);
+            }
+            if (albumPrivacy != Privacy.ignore)
+            {
+                content.Add(new StringContent(Utilities.convertToString(albumPrivacy)), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.privacy]);
+            }
+            if (albumLayout != Layout.ignore)
+            {
+                content.Add(new StringContent(Utilities.convertToString(albumLayout)), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.layout]);
+            }
+            String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.AlbumUpdate(albumID), content);
+            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+
+            return status;
+        }
+
+        /// <summary>
+        /// Deletes an album
+        /// </summary>
+        /// <param name="albumID">The delete hash or album ID (only if logged in) you want to delete.</param>
+        /// <returns></returns>
+        public async Task<ImgurBasic> AlbumDeletion(string albumID)
+        {
+            String responseString = await DeleteImgurDataAsync(ImgurEndpoints.AlbumDeletion(albumID));
+            return await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+        }
+
+
         #endregion
 
         #region [API] Gallery Endpoint
@@ -238,18 +401,18 @@ namespace ImgShare.APISource.Data
         {
             // TODO: Make all the strings used in form content constants somewhere
             MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
-            content.Add(new ByteArrayContent(ImageToUploadFileData), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
+            content.Add(new ByteArrayContent(ImageToUploadFileData), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.image]);
             if (Title != "")
             {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.title]);
             }
             if (Description != "")
             {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.description]);
             }
             if (Album != "")
             {
-                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
+                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.album]);
             }
 
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpload(), content);
@@ -269,18 +432,18 @@ namespace ImgShare.APISource.Data
         public async Task<ImgurImage> ImageUploadAsync(String url, String Title = "", String Description = "", String Album = "")
         {
             MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
-            content.Add(new StringContent(url), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.image]);
+            content.Add(new StringContent(url), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.image]);
             if (Title != "")
             {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.title]);
             }
             if (Description != "")
             {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.description]);
             }
             if (Album != "")
             {
-                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.album]);
+                content.Add(new StringContent(Album), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.album]);
             }
 
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpload(), content);
@@ -312,11 +475,11 @@ namespace ImgShare.APISource.Data
             MultipartFormDataContent content = new MultipartFormDataContent(BoundaryGuid.ToString());
             if (Title != "")
             {
-                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.title]);
+                content.Add(new StringContent(Title), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.title]);
             }
             if (Description != "")
             {
-                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImageEndpointParameters.description]);
+                content.Add(new StringContent(Description), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.description]);
             }
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.ImageUpdate(deleteHashOrImageID), content);
             ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
