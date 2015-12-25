@@ -1,7 +1,7 @@
 ﻿using ImgShare.APISource.Data;
 using ImgShare.APISource.Data.ImgurResponseModels;
 using ImgShare.APISource.UnitTests.TestBase;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
