@@ -6,6 +6,8 @@ using ImgShare.APISource.Data.ImgurResponseModels;
 using System.Net;
 using ImgShare.APISource.UnitTests.TestBase;
 using ImgShare.APISource.Data;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace ImgShare.APISource.UnitTests.Image
 {
@@ -21,22 +23,29 @@ namespace ImgShare.APISource.UnitTests.Image
         // A list of images that we'll attempt deletion on after we're done
         List<ImgurImage> imagesToDelete;
 
+        // Http client for fetching image byte array
+        HttpClient hClient = new HttpClient();
+
         [TestInitialize]
-        public void StartupTests()
+        public async void StartupTests()
         {
             // Ensure that we have setup the client API keys correctly
             Utilities.InitializeImgurAPISource();
 
             // Download the test image and store it in the byte array
-            WebRequest request = WebRequest.Create(TestImage);
-            WebResponse response = request.GetResponseAsync().Result;
-            Stream stream = response.GetResponseStream();
-
-            ImageBytes = new Byte[response.ContentLength];
-            response.GetResponseStream().Read(ImageBytes, 0, (int)response.ContentLength);
-
+            HttpResponseMessage response = hClient.GetAsync(TestImage).Result;
+            response.EnsureSuccessStatusCode();
+            ImageBytes = await response.Content.ReadAsByteArrayAsync();
+            
             // Setup our deletion list for later
             imagesToDelete = new List<ImgurImage>();
+        }
+
+        protected internal async Task<string> ProcessResponseAsync(HttpResponseMessage response)
+        {
+            response.EnsureSuccessStatusCode();
+            String responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
         }
 
         /// <summary>
