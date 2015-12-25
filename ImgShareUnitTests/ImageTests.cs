@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ImgShare.APISource.Data.ImgurResponseModels;
 using System.Net;
-using System.Threading;
 using ImgShare.APISource.UnitTests.TestBase;
 using ImgShare.APISource.Data;
 
