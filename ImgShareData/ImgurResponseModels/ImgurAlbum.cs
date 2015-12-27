@@ -11,6 +11,8 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
     {
         public String ID { get; set; }
 
+        public String deletehash { get; set; }
+
         public String Title { get; set; }
 
         public String Description { get; set; }
@@ -35,5 +37,11 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
 
         [JsonProperty(PropertyName="Images")]
         public IEnumerable<ImgurImage> Images { get; set; }
+    }
+
+    internal class ImgurAlbumResponse : ImgurBasic
+    {
+        [JsonProperty(PropertyName ="data")]
+        public ImgurAlbum album { get; set; }
     }
 }

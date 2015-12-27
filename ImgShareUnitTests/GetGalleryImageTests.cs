@@ -18,7 +18,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         /// <summary>
         /// Checks the top images by viral sorting on the main page.  Looks to see that we got some reasonable number of images back.
         /// </summary>
-        [TestMethod]
+        [TestCategory("gallery"), TestMethod]
         public void TopImagesReturnsImages()
         {
             ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.top, GallerySort.viral, 0).Result;
@@ -29,7 +29,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         /// <summary>
         /// Checsk top and hot images on two different pages.
         /// </summary>
-        [TestMethod]
+        [TestCategory("gallery"), TestMethod]
         public void GetImagesReturnsImagesOnDifferentPages()
         {
             ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.top, GallerySort.viral, 1).Result;
@@ -44,7 +44,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         /// <summary>
         /// Checks the hot images section to see if we get stuff back.
         /// </summary>
-        [TestMethod]
+        [TestCategory("gallery"), TestMethod]
         public void HotImagesReturnsImages()
         {
             ImgurGalleryImageList list = ImgurApiSource.Instance.GalleryDetailsAsync(GallerySection.hot, GallerySort.time, 0).Result;
@@ -55,7 +55,7 @@ namespace ImgShare.APISource.UnitTests.Gallery
         /// <summary>
         /// Check that the search actually returns a few images if you look for cats
         /// </summary>
-        [TestMethod]
+        [TestCategory("gallery"), TestMethod]
         public void GallerySearchReturnsImages()
         {
             ImgurGalleryImageList list = ImgurApiSource.Instance.GallerySearchAsync(GallerySort.time, GallerySearchWindow.all, 0, "cats").Result;

@@ -14,4 +14,7 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         [JsonProperty(PropertyName = "status")]
         public int httpStatus { get; set; }
     }
+
+
+
 }

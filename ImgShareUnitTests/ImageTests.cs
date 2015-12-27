@@ -53,7 +53,7 @@ namespace ImgShare.APISource.UnitTests.Image
         /// get details call on the uploaded image to check that the other properties we requested were
         /// filled in correctly.
         /// </summary>
-        [TestMethod]
+        [TestCategory("image"), TestMethod]
         public void UploadImageWithFile()
         {
             
@@ -75,7 +75,7 @@ namespace ImgShare.APISource.UnitTests.Image
         /// get details call on the uploaded image to check that the other properties we requested were
         /// filled in correctly.
         /// </summary>
-        [TestMethod]
+        [TestCategory("image"), TestMethod]
         public void UploadImageWithURL()
         {
             ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(TestImage, "Hello", "DescriptionTest").Result;
@@ -93,7 +93,7 @@ namespace ImgShare.APISource.UnitTests.Image
         /// <summary>
         /// Uploads an Image to Imgur by ByteArray then attempts a delete on the uploaded Image.
         /// </summary>
-        [TestMethod]
+        [TestCategory("image"), TestMethod]
         public void DeleteUploadedImageByDeleteHash()
         {
             ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(ImageBytes, "Hello", "DescriptionTest").Result;
@@ -109,7 +109,7 @@ namespace ImgShare.APISource.UnitTests.Image
         /// <summary>
         /// Uploads an Image to Imgur by ByteArray then attempts to update the metadata
         /// </summary>
-        [TestMethod]
+        [TestCategory("image"), TestMethod]
         public void UpdateImageByDeleteHash()
         {
             ImgurImage test = ImgurApiSource.Instance.ImageUploadAsync(ImageBytes, "Hello", "DescriptionTest").Result;
