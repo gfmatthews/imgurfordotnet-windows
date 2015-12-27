@@ -53,7 +53,6 @@ namespace ImgShare.APISource.UnitTests.Album
             Assert.AreEqual(album.Description, descriptor);
             Assert.AreEqual(album.ImagesInAlbum, listOfImages.Count);
 
-
             // update information
             List<string> stringList = new List<string>();
             ImgurBasic responseBasic = ImgurApiSource.Instance.AlbumUpdateAsync(album.deletehash, stringList, null, albumTitleUpdate, albumDescUpdate, Privacy.hidden, Layout.blog).Result;
@@ -61,7 +60,6 @@ namespace ImgShare.APISource.UnitTests.Album
 
             // destroy
             ImgurBasic deleteResponse = ImgurApiSource.Instance.AlbumDeletionAsync(album.deletehash).Result;
-
             Assert.IsTrue(deleteResponse.success);
 
         }
