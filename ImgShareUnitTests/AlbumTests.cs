@@ -56,16 +56,11 @@ namespace ImgShare.APISource.UnitTests.Album
 
             // update information
             List<string> stringList = new List<string>();
-            ImgurAlbum newAlbum = ImgurApiSource.Instance.AlbumUpdateAsync(album.deletehash, stringList, null, albumTitleUpdate, albumDescUpdate, Privacy.hidden, Layout.blog).Result;
-
-            
-            Assert.AreEqual(newAlbum.Title, albumTitleUpdate);
-            Assert.AreEqual(newAlbum.Description, albumDescUpdate);
-            Assert.AreEqual(newAlbum.ImagesInAlbum, listOfImages.Count);
-
+            ImgurBasic responseBasic = ImgurApiSource.Instance.AlbumUpdateAsync(album.deletehash, stringList, null, albumTitleUpdate, albumDescUpdate, Privacy.hidden, Layout.blog).Result;
+            Assert.IsTrue(responseBasic.success);
 
             // destroy
-            ImgurBasic deleteResponse = ImgurApiSource.Instance.AlbumDeletionAsync(newAlbum.deletehash).Result;
+            ImgurBasic deleteResponse = ImgurApiSource.Instance.AlbumDeletionAsync(album.deletehash).Result;
 
             Assert.IsTrue(deleteResponse.success);
 

@@ -277,7 +277,7 @@ namespace ImgShare.APISource.Data
         /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
         /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
         /// <returns></returns>
-        public async Task<ImgurAlbum> AlbumUpdateAsync(string albumID, List<ImgurImage> imageList, ImgurImage coverImage, String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
+        public async Task<ImgurBasic> AlbumUpdateAsync(string albumID, List<ImgurImage> imageList, ImgurImage coverImage, String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
         {
             List<string> imageIDList = new List<string>();
             if (imageList != null)
@@ -302,7 +302,7 @@ namespace ImgShare.APISource.Data
         /// <param name="albumPrivacy">Sets the privacy level of the album. Values are : public | hidden | secret. Defaults to user's privacy settings for logged in users.</param>
         /// <param name="albumLayout">Sets the layout to display the album. Values are : blog | grid | horizontal | vertical</param>
         /// <returns></returns>
-        public async Task<ImgurAlbum> AlbumUpdateAsync(string albumID, List<string> imageIDs = null, string coverImageId = "", String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
+        public async Task<ImgurBasic> AlbumUpdateAsync(string albumID, List<string> imageIDs = null, string coverImageId = "", String title = "", String description = "", Privacy albumPrivacy = Privacy.ignore, Layout albumLayout = Layout.ignore)
         {
             if (albumID == null)
             {
@@ -315,7 +315,7 @@ namespace ImgShare.APISource.Data
                 string serializedImageList = await Task.Run(() => JsonConvert.SerializeObject(imageIDs));
                 content.Add(new StringContent(serializedImageList), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.ids]);
             }
-            if (coverImageId != String.Empty)
+            if (coverImageId != String.Empty && coverImageId != null && coverImageId != "")
             {
                 content.Add(new StringContent(coverImageId), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.cover]);
             }
@@ -336,19 +336,8 @@ namespace ImgShare.APISource.Data
                 content.Add(new StringContent(Utilities.convertToString(albumLayout)), ImgurEndpoints.ImageEndpointParameterLookup[ImgurParameters.layout]);
             }
             String responseString = await PostAnonymousImgurDataAsync(ImgurEndpoints.AlbumUpdate(albumID), content);
-            ImgurBasicWithAlbum status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasicWithAlbum>(responseString, _defaultSerializerSettings));
-
-            // By default, we only get the deletehash in the basic response but this should really include the deletehash
-            // so we make another call to fill in the rest of the details about the object 
-            ImgurAlbum album = await this.AlbumDetailsAsync(status.data.id);
-
-            // if the user passed in the deletehash, fill that back in the object we're about to send back
-            if (album.ID.ToLower() != albumID.ToLower())
-            {
-                album.deletehash = status.data.deletehash;
-            }
-
-            return album;
+            ImgurBasic status = await Task.Run(() => JsonConvert.DeserializeObject<ImgurBasic>(responseString, _defaultSerializerSettings));
+            return status;
         }
 
         /// <summary>
