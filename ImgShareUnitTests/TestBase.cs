@@ -9,6 +9,7 @@ namespace ImgShare.APISource.UnitTests.TestBase
 {
     public static class Utilities
     {
+        // please don't steal these
         public static String ClientID = "204544071ed584d";
         public static String ClientSecret = "884884ea1098066ca3e20cd7500a6f86a2663c8b";
 

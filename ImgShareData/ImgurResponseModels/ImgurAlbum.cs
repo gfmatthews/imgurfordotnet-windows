@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// This model represents the data for albums 
+    /// http://api.imgur.com/models/album
+    /// </summary>
     public class ImgurAlbum
     {
         public String ID { get; set; }

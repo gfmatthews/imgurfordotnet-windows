@@ -9,6 +9,9 @@ namespace ImgShare.APISource.Data
     static public class ImgurEndpoints
     {
         #region API Base
+        /// <summary>
+        /// Returns the endpoint base used to create Imgur API calls - free or paid
+        /// </summary>
         static internal String APIBase
         {
             get

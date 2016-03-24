@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// The data type representing a trophy in a user's gallery information
+    /// </summary>
     public class Trophy
     {
         public int id { get; set; }
@@ -18,6 +21,10 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public string image { get; set; }
     }
 
+    /// <summary>
+    /// The totals for a user's gallery information. 
+    /// http://api.imgur.com/models/gallery_profile
+    /// </summary>
     public class ImgurGalleryProfile
     {
         public int total_gallery_comments { get; set; }

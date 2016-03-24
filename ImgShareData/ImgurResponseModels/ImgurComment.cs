@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// This data model represents an images comment. 
+    /// http://api.imgur.com/models/comment
+    /// </summary>
     public class ImgurComment
     {
         public String ID { get; set; }

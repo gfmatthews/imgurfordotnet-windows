@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// The detailed data model for a reply
+    /// </summary>
     public class ImgurReplyDetails
     {
         public object album_cover { get; set; }
@@ -25,6 +28,9 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public object vote { get; set; }
     }
 
+    /// <summary>
+    /// The basic data model for a reply
+    /// </summary>
     public class Reply
     {
         public int id { get; set; }
@@ -33,6 +39,9 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public ImgurReplyDetails content { get; set; }
     }
 
+    /// <summary>
+    /// A simple Imgur message response 
+    /// </summary>
     public class ImgurMessage
     {
         public string id { get; set; }
@@ -44,6 +53,9 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public int datetime { get; set; }
     }
 
+    /// <summary>
+    /// The message with a notification embedded
+    /// </summary>
     public class ImgurNotificationMessage
     {
         public int id { get; set; }
@@ -52,6 +64,10 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public ImgurMessage content { get; set; }
     }
 
+    /// <summary>
+    /// The base model for a notification. 
+    /// http://api.imgur.com/models/notification
+    /// </summary>
     public class ImgurNotification
     {
         public List<Reply> replies { get; set; }

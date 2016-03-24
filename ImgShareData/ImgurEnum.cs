@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImgShare.APISource.Data
 {
+    /// <summary>
+    /// Global parameters used in multiple Imgur calls
+    /// </summary>
     public enum ImgurParameters
     {
         image,
@@ -18,7 +21,9 @@ namespace ImgShare.APISource.Data
         cover
     };
 
-
+    /// <summary>
+    /// Gallery section parameters
+    /// </summary>
     public enum GallerySection
     {
         hot,
@@ -26,18 +31,27 @@ namespace ImgShare.APISource.Data
         user
     };
 
+    /// <summary>
+    /// Gallery sort parameters
+    /// </summary>
     public enum GallerySort
     {
         viral,
         time
     };
 
+    /// <summary>
+    /// Used by the ImgurApiSource object to denote free or paid endpoint types
+    /// </summary>
     public enum ImgurEndpointUseType
     {
         free,
         paid
     };
 
+    /// <summary>
+    /// Gallery search parameters for controlling how far back to search
+    /// </summary>
     public enum GallerySearchWindow
     {
         day,
@@ -48,9 +62,12 @@ namespace ImgShare.APISource.Data
     };
 
     /// <summary>
+    /// Privacy parameter used to control privacy settings on album and image posting
+    /// </summary>
+    /// <remarks>
     /// The real imgur API calls the most open level of albums "public" but that clearly wouldn't work here since its a reserved name so it
     /// is called "open" here instead.
-    /// </summary>
+    /// </remarks>
     public enum Privacy
     {
         open,
@@ -59,6 +76,9 @@ namespace ImgShare.APISource.Data
         ignore
     };
 
+    /// <summary>
+    /// Layout parameters used in album creation
+    /// </summary>
     public enum Layout
     {
         blog,

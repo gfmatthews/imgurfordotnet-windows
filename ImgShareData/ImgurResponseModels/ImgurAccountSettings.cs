@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// The account settings, only accessible if you're logged in as the user. 
+    /// http://api.imgur.com/models/account_settings
+    /// </summary>
     public class ImgurAccountSettings
     {
         public String Email { get; set; }

@@ -8,6 +8,10 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// The base model for an image. 
+    /// http://api.imgur.com/models/image
+    /// </summary>
     public class ImgurImage
     {
         public String ID { get; set; }

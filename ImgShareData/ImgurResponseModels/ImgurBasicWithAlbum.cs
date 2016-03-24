@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
-    class ImgurBasicWithAlbum : ImgurBasic
+    /// <summary>
+    /// Basic response tailored for an album
+    /// </summary>
+    public class ImgurBasicWithAlbum : ImgurBasic
     {
         // Responses sometimes include a creation response if this response is from creating an object (like an album or image)
         public ImgurAlbumCreationResponse data { get; set; }
     }
 
+    /// <summary>
+    /// The standard response type returned when creating an album
+    /// </summary>
     public class ImgurAlbumCreationResponse
     {
         public string id { get; set; }
