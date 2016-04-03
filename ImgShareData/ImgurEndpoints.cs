@@ -9,6 +9,9 @@ namespace ImgShare.APISource.Data
     static public class ImgurEndpoints
     {
         #region API Base
+        /// <summary>
+        /// Returns the endpoint base used to create Imgur API calls - free or paid
+        /// </summary>
         static internal String APIBase
         {
             get
@@ -155,48 +158,18 @@ namespace ImgShare.APISource.Data
         }
         #endregion
 
-        static public Dictionary<ImageEndpointParameters, String> ImageEndpointParameterLookup = new Dictionary<ImageEndpointParameters, string>()
+        static public Dictionary<ImgurParameters, String> ImageEndpointParameterLookup = new Dictionary<ImgurParameters, string>()
         {
-            {ImageEndpointParameters.image, "image"},
-            {ImageEndpointParameters.album, "album"},
-            {ImageEndpointParameters.description, "description"},
-            {ImageEndpointParameters.title, "title"}
+            {ImgurParameters.image, "image"},
+            {ImgurParameters.album, "album"},
+            {ImgurParameters.description, "description"},
+            {ImgurParameters.title, "title"},
+            {ImgurParameters.ids, "ids" },
+            {ImgurParameters.layout, "layout" },
+            {ImgurParameters.privacy, "privacy" },
+            {ImgurParameters.cover, "cover" }
         };
     }
 
-    public enum GallerySection
-    {
-        hot,
-        top,
-        user
-    };
 
-    public enum GallerySort
-    {
-        viral,
-        time
-    };
-
-    public enum ImageEndpointParameters
-    {
-        image,
-        title,
-        description,
-        album
-    };
-
-    public enum ImgurEndpointUseType
-    {
-        free,
-        paid
-    };
-
-    public enum GallerySearchWindow
-    {
-        day,
-        week,
-        month,
-        year,
-        all
-    };
 }

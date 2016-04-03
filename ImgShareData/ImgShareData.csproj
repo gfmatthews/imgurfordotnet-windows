@@ -104,11 +104,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ImgurEnum.cs" />
     <Compile Include="ImgurResponseModels\ImgurAccountStatistics.cs" />
     <Compile Include="ImgurResponseModels\ImgurAccount.cs" />
     <Compile Include="ImgurResponseModels\ImgurAccountSettings.cs" />
     <Compile Include="ImgurResponseModels\ImgurAlbum.cs" />
     <Compile Include="ImgurResponseModels\ImgurBasic.cs" />
+    <Compile Include="ImgurResponseModels\ImgurBasicWithAlbum.cs" />
     <Compile Include="ImgurResponseModels\ImgurBasicWithImage.cs" />
     <Compile Include="ImgurResponseModels\ImgurComment.cs" />
     <Compile Include="ImgurResponseModels\ImgurGalleryImage.cs" />

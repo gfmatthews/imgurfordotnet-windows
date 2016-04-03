@@ -7,9 +7,15 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// This model represents the data for albums 
+    /// http://api.imgur.com/models/album
+    /// </summary>
     public class ImgurAlbum
     {
         public String ID { get; set; }
+
+        public String deletehash { get; set; }
 
         public String Title { get; set; }
 
@@ -35,5 +41,11 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
 
         [JsonProperty(PropertyName="Images")]
         public IEnumerable<ImgurImage> Images { get; set; }
+    }
+
+    internal class ImgurAlbumResponse : ImgurBasic
+    {
+        [JsonProperty(PropertyName ="data")]
+        public ImgurAlbum album { get; set; }
     }
 }

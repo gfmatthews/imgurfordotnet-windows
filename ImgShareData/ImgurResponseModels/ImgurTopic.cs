@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
-    public class Datum
+    /// <summary>
+    /// The data model used in the list of topics
+    /// </summary>
+    public class ImgurTopicDetail
     {
         public int id { get; set; }
         public string name { get; set; }
@@ -15,9 +18,12 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
         public bool ephemeral { get; set; }
     }
 
+    /// <summary>
+    /// The base model for a topic. 
+    /// </summary>
     public class ImgurTopicBase
     {
-        public List<Datum> data { get; set; }
+        public List<ImgurTopicDetail> data { get; set; }
         public bool success { get; set; }
         public int status { get; set; }
     }

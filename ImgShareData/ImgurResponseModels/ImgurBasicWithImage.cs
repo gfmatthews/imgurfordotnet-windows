@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// A basic return type with some image data
+    /// </summary>
     public class ImgurBasicWithImage : ImgurBasic
     {
         [JsonProperty(PropertyName = "data")]

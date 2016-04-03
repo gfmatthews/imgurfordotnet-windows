@@ -8,6 +8,10 @@ using Newtonsoft.Json;
 
 namespace ImgShare.APISource.Data.ImgurResponseModels
 {
+    /// <summary>
+    /// The data model formatted for gallery images. 
+    /// http://api.imgur.com/models/gallery_image
+    /// </summary>
     public class ImgurGalleryImage : ImgurImage
     {
         public bool Vote { get; set; }
@@ -26,6 +30,9 @@ namespace ImgShare.APISource.Data.ImgurResponseModels
 
     }
 
+    /// <summary>
+    /// The data type representing a response with a list of images
+    /// </summary>
     public class ImgurGalleryImageList
     {
         [JsonProperty(PropertyName = "data")]
